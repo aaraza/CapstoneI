@@ -1,4 +1,3 @@
-
 import newspaper
 import sqlalchemy
 from sqlalchemy import create_engine
@@ -9,6 +8,23 @@ from time import sleep, time
 import json
 import sys, os
 from custom_logging import get_logger 
+
+def validate_url(url):
+	"""
+		This method checks the URL of an article to try and throw out foreign language articles based on ccTLD
+		:param url the URL of the article
+		:return True if the article ccTLD is valid
+	"""
+	invalid_urls = ['in', 'de', 'jp', 'kr', 'fr', 'mx', 'za', 'it', 'gr', 'ph', 'se', 'be', 'sa', 'int', 'ie', 'ke', 'sg', 'my', 
+					'cn', 'nz', 'pk', 'ch', 'mil', 'ng', 'br', 'zw', 'fi', 'na', 'ly', 'link', 'ir', 'xyz', 'is', 'eg', 'mp', 'nl', 'dk', 'ua', 'mt', 'tw', 'id']
+
+	url_ending = url.split('//')[-1].split('/')[0].split('.')[-1]
+	
+	if url_ending not in invalid_urls:
+		return True
+	else:
+		return False
+
 
 def scrape(logging):
 	
@@ -91,25 +107,26 @@ def scrape(logging):
 											secondAuth = str(authors[1:])
 									except IndexError as ie:
 										pass
-									try:
-										insert = table.insert().values( 
-											site=name, 
-											title=title, 
-											author=primary_author,
-											secondary_authors=secondAuth,
-											published_on=published_date,
-											accessed_on=func.current_timestamp(),
-											url=url,
-											body=text,
-											html=html,
-											newspaper_keywords=keywords,
-											newspaper_summary= 	
-											summary)					
-										engine.execute(insert)
-									except Exception as e:
-										logging.error("::Exception:Database insertion error for page: " + url + "::")
-										logging.error("::Exception: " + str(e) + "::")
-										pass
+									if validate_url(url) is not False:
+										try:
+											insert = table.insert().values( 
+												site=name, 
+												title=title, 
+												author=primary_author,
+												secondary_authors=secondAuth,
+												published_on=published_date,
+												accessed_on=func.current_timestamp(),
+												url=url,
+												body=text,
+												html=html,
+												newspaper_keywords=keywords,
+												newspaper_summary= 	
+												summary)					
+											engine.execute(insert)
+										except Exception as e:
+											logging.error("::Exception:Database insertion error for page: " + url + "::")
+											logging.error("::Exception: " + str(e) + "::")
+											pass
 			except Exception as e:
 				logging.error("::Exception:Scrapping error for site: " + name + "::")
 				logging.error("::Exception: " + str(e) + "::")

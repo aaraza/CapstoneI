@@ -1,10 +1,10 @@
+from __future__ import division
 import psycopg2
 import pandas as pd
 import nltk
 from nltk.corpus import stopwords
 from nltk import FreqDist
 import re
-from __future__ import division
 from nltk.tag import StanfordNERTagger
 from nltk import pos_tag
 from nltk.chunk import conlltags2tree
@@ -13,15 +13,16 @@ from nltk.tokenize import sent_tokenize
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
 from sqlalchemy import create_engine
 import datetime
+import json
 
 
-def update_index(low_index, high_index):
+def update_index(high_index):
     """
     Updates low and high index
     """
     file = open("data.txt", "w")
-    file.writelines(str(data['max']+1) + "\n")
-    file.writelines(str(data['max']+1000) + "\n")
+    file.writelines(str(high_index+1) + "\n")
+    file.writelines(str(high_index+1000) + "\n")
     file.close()
 
 def read_index():
@@ -226,7 +227,7 @@ def main():
         se = pd.Series(word_bag)
         df['word_bag'] = se.values
 
-        st = StanfordNERTagger('/home/kurt.bognar/stanford-ner-2017-06-09/classifiers/english.all.3class.distsim.crf.ser.gz','/home/kurt.bognar/stanford-ner-2017-06-09/stanford-ner.jar', encoding='utf-8')
+        st = StanfordNERTagger('/Users/ali/Desktop/CapstoneI/DataWarehouse/english.all.3class.distsim.crf.ser.gz','/Users/ali/Desktop/CapstoneI/DataWarehouse/stanford-ner.jar', encoding='utf-8')
 
         classified_texts = []
         for body in df['tokenized_body']:
@@ -270,9 +271,9 @@ def main():
         df['binary_sentiment'] = se.values
 
         engine = create_engine('postgresql://postgres:secret@ec2-52-27-114-159.us-west-2.compute.amazonaws.com:9000/cap')
-        df.to_sql(name='nlp_dim', con=engine, if_exists='append')
-        update_index()
-        print('fuck')
+        df.to_sql(name='nlp_dim_2', con=engine, if_exists='append')
+        update_index(data['max'])
+        print('completed')
         if datetime.datetime.now().hour == 6:
             print(df)
             break

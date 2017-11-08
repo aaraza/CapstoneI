@@ -22,7 +22,7 @@ def update_index(high_index):
     """
     file = open("data.txt", "w")
     file.writelines(str(high_index+1) + "\n")
-    file.writelines(str(high_index+1000) + "\n")
+    file.writelines(str(high_index+501) + "\n")
     file.close()
 
 def read_index():
@@ -164,7 +164,7 @@ def main():
 
     while True:
         data = read_index()
-        if data['min'] > 150000:
+        if data['min'] > 160000:
             break
         print(data)
         conn = psycopg2.connect("dbname='cap' user='postgres' host='ec2-52-27-114-159.us-west-2.compute.amazonaws.com' port=9000 password ='secret'")
@@ -227,7 +227,7 @@ def main():
         se = pd.Series(word_bag)
         df['word_bag'] = se.values
 
-        st = StanfordNERTagger('/Users/ali/Desktop/CapstoneI/DataWarehouse/english.all.3class.distsim.crf.ser.gz','/Users/ali/Desktop/CapstoneI/DataWarehouse/stanford-ner.jar', encoding='utf-8')
+        st = StanfordNERTagger('/home/ubuntu/english.all.3class.distsim.crf.ser.gz','/home/ubuntu/stanford-ner-3.8.0.jar', encoding='utf-8', java_options='-mx50000m')
 
         classified_texts = []
         for body in df['tokenized_body']:
@@ -271,12 +271,9 @@ def main():
         df['binary_sentiment'] = se.values
 
         engine = create_engine('postgresql://postgres:secret@ec2-52-27-114-159.us-west-2.compute.amazonaws.com:9000/cap')
-        df.to_sql(name='nlp_dim_2', con=engine, if_exists='append')
+        df.to_sql(name='nlp_dim_hpc', con=engine, if_exists='append')
         update_index(data['max'])
         print('completed')
-        if datetime.datetime.now().hour == 6:
-            print(df)
-            break
-
+        
 if __name__ == '__main__':
     main()

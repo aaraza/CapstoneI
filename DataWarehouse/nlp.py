@@ -223,7 +223,7 @@ def stanfordNE2tree(ne_tagged_sent):
 '''
 Extract named entities from each article and append to dataframe.
 '''
-def extract_named_entities(df):
+def extract_named_entities(df, st):
     classified_texts = []
     for body in df['tokenized_body']:
         classified_texts.append(st.tag(body))
@@ -248,11 +248,11 @@ def extract_named_entities(df):
 
     se = pd.Series(ne_in_sents)
     df['named_entities'] = se.values
-	
+
 def main():
 
     engine = create_engine('postgresql://postgres:secret@ec2-52-27-114-159.us-west-2.compute.amazonaws.com:9000/cap')
-	st = StanfordNERTagger(stanfordNLP_classifier_path, stanfordNER_jar_path, encoding='utf-8', java_options=jvm_ram_setting)
+    st = StanfordNERTagger(stanfordNLP_classifier_path, stanfordNER_jar_path, encoding='utf-8', java_options=jvm_ram_setting)
     while True:
         data = read_index()
         if data['min'] > 160000:
@@ -269,7 +269,7 @@ def main():
 
         bag_of_words_articles(df)
 
-        extract_named_entities(df)
+        extract_named_entities(df, st)
 
         calculate_lexical_diversity(df)
 

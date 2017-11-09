@@ -19,7 +19,7 @@ import json
 stanfordNLP_classifier_path = '/home/ubuntu/english.all.3class.distsim.crf.ser.gz'
 stanfordNER_jar_path = '/home/ubuntu/stanford-ner-3.8.0.jar'
 ram_usage = 16000
-jvm_ram_setting = '-mx' + ram_usage + 'm'
+jvm_ram_setting = '-mx' + str(ram_usage) + 'm'
 
 def update_index(high_index):
     """
@@ -220,7 +220,35 @@ def stanfordNE2tree(ne_tagged_sent):
     sent_conlltags = [(token, pos, ne) for token, pos, ne in zip(sent_tokens, sent_pos_tags, sent_ne_tags)]
     ne_tree = conlltags2tree(sent_conlltags)
     return ne_tree
+'''
+Extract named entities from each article and append to dataframe.
+'''
+def extract_named_entities(df):
+    classified_texts = []
+    for body in df['tokenized_body']:
+        classified_texts.append(st.tag(body))
 
+    ne_trees = []
+    for text in classified_texts:
+        try:
+            ne_trees.append(stanfordNE2tree(text))
+        except:
+            ne_trees.append(' ')
+
+    ne_in_sent = []
+    ne_in_sents = []
+    for tree in ne_trees:
+        ne_in_sent = []
+        for subtree in tree:
+            if type(subtree) == Tree: # If subtree is a noun chunk, i.e. NE != "O"
+                ne_label = subtree.label()
+                ne_string = " ".join([token for token, pos in subtree.leaves()])
+                ne_in_sent.append((ne_string, ne_label))
+        ne_in_sents.append(ne_in_sent)
+
+    se = pd.Series(ne_in_sents)
+    df['named_entities'] = se.values
+	
 def main():
 
     engine = create_engine('postgresql://postgres:secret@ec2-52-27-114-159.us-west-2.compute.amazonaws.com:9000/cap')
@@ -235,23 +263,23 @@ def main():
 
         tokenize_and_wordcount_articles(df)
 
-		stopword_articles(df)
+        stopword_articles(df)
 
-		lemmatize_articles(df)
+        lemmatize_articles(df)
 
-		bag_of_words_articles(df)
+        bag_of_words_articles(df)
 
-		extract_named_entities(df)
+        extract_named_entities(df)
 
-		calculate_lexical_diversity(df)
+        calculate_lexical_diversity(df)
 
-		sentiment_score = calculate_sentiment(df)
-		binary_sentiment = assign_sentiment(sentiment_score)
+        sentiment_score = calculate_sentiment(df)
+        binary_sentiment = assign_sentiment(sentiment_score)
 
-		se = pd.Series(sentiment_score)
-		df['sentiment_score'] = se.values
-		se = pd.Series(binary_sentiment)
-		df['binary_sentiment'] = se.values
+        se = pd.Series(sentiment_score)
+        df['sentiment_score'] = se.values
+        se = pd.Series(binary_sentiment)
+        df['binary_sentiment'] = se.values
 
         engine = create_engine('postgresql://postgres:secret@ec2-52-27-114-159.us-west-2.compute.amazonaws.com:9000/cap')
         df.to_sql(name='nlp_dim_hpc', con=engine, if_exists='append')

@@ -259,7 +259,7 @@ def main():
             break
         print(data)
         conn = psycopg2.connect("dbname='cap' user='postgres' host='ec2-52-27-114-159.us-west-2.compute.amazonaws.com' port=9000 password ='secret'")
-        df = pd.read_sql_query(sql="SELECT * FROM articles WHERE ID >=%(min)s and ID <= %(max)s ORDER BY ID", con=conn, params=data)
+        df = pd.read_sql_query(sql="SELECT * FROM articles WHERE id NOT IN (SELECT id FROM nlp_dim_hpc)", con=conn, params=data)
 
         tokenize_and_wordcount_articles(df)
 

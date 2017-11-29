@@ -60,6 +60,13 @@ div#visuals
 	margin: auto;
 }
 
+div#wordcloud
+{
+        height: 80%;
+        width: 80%;
+        margin: auto;
+}
+
 @keyframes animate-background
 {
 	from {background-position: 0px 0px, 0px 0px; }

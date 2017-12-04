@@ -1,73 +1,16 @@
-# CapstoneI
-This our project for capstone. 
+# Disclosure 
 
-Group consisting of:
+### The Problem
+"Fake news" is a common phrase used by politicians and PR to criticize the sensationalized focus of mainstream American media. The term came to prominence during the 2016 presidental election which was full of questionable reporting that focused on entertainment and shock value rather than substance.
 
-Kurt
-Ali
-Zach
-Justin
-Jared
+Investigative journalism has long been considered an essential part of democracy, responsible for holding officials and organizations accountable. It appears that the modern media has failed to uphold this virtue. It has become evident that there exists an urgent need to analyze the content of news in order to organize information so that it is accessible to the public and the biases of sources are highlighted.
 
-We want to explore machine learning application development, language 
-analysis, and predictions about news bias through integrating the preceeding technologies. 
+### Solution
+News articles generate massive amounts of data. Everyday, thousands of sources publish countless articles. This data is easily accesible but has traditionally been considered difficult to analyze because it's format isn't standardized and it is quite tedious for humans to analyze this information. Advancments in high-performance computing, data science, machine learning, and natural language processing have mitigated the difficulty of analyzing news articles. Disclosure aims to apply the afreomentioned computational advancments towards analyzing news articles.
 
-This readme is a document detailing our brainstorming and thinking
- process throughout development. 
 
-## TO DO
-
-- [ ] backup database
-
-- [ ] Label clusters by hand based on their contents
-
-- [ ] Finish backend for classifying new article
-
-- [ ] Finish frontend for submitting and classifying article
-
-- [ ] Finish classification feature for site
-
-- [ ] Finish documentation 
-
-- [ ] Add power point slides into documentation
-
-- [ ] Finish backend for displaying list of articles by topic 
-
-- [ ] Upload finished code and documentation in pdf format to a flash drive to turn in thursday by 2:30pm
-
-### Data & Analysis of articles
-
-We want to use news articles as a source of data for machine learning classification and possible predictions based upon our calculated model. The first question we need to address is that of our dataset. 
-
-#### Initial thoughts on data
-
-We know we need more information. We are going to do a search on academic articles concerning language analysis metrics and determine a realistic scope for our analysis of news article text. 
-     
-The following is what we know:
-
-- Python is good for analyzing text 
-
-- Sentiment analysis is one possible text metric in regards to all data (any topic can be positive or negative, so a lot of simple binary data could be derived following this schema)
-
-- There might be powerful languages at our disposal
-
-**TL,DR;**
-
-We need more research before we can decide how we want to approach gathering data from articles. 
-
-#### Technologies we are considering
-
-	[Kurt had a list written of some so far he might add]
-	
-	- Python
-	
-
-#### Initial thoughts on final product of application
-
-Assuming we have the data to support it, we would like to accomplish the following:
-
-- Use data to create metric that measures the ideological alignment of the article in question, and represent it graphically as:
-
-	[diagram of cardinal direction metric thingy]
-	
-- Use classifiers created by dataset to predict the potential idealogical alignment of an article submitted for inspection by the application 
+### Methadology
+- Scrape articles from major publications
+- Clean and prepare data for analysis
+- Perform Natural Language Processing, Machine Learning analysis
+- Create visualizations to display consumable results

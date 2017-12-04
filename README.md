@@ -9,7 +9,7 @@ Investigative journalism has long been considered an essential part of democracy
 News articles generate massive amounts of data. Everyday, thousands of sources publish countless articles. This data is easily accesible but has traditionally been considered difficult to analyze because it's format isn't standardized and it is quite tedious for humans to analyze this information. Advancments in high-performance computing, data science, machine learning, and natural language processing have mitigated the difficulty of analyzing news articles. Disclosure aims to apply the afreomentioned computational advancments towards analyzing news articles.
 
 
-### Methadology
+### Methodology
 - Scrape articles from major publications
 - Clean and prepare data for analysis
 - Perform Natural Language Processing, Machine Learning analysis
